@@ -1,6 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const userModel = require('../models/userModel');
+const protectRouter = require('./authHelper')
 
 userRouter.route('/')
 .get(protectRouter,getUsers)
@@ -34,15 +35,6 @@ async function getUsers(req,res){
     res.send({message:"List of users ",data:users});
 }
 
-function protectRouter(req,res,next){
-    if(req.cookies.isLoggedIn){
-        next();
-    }else{
-        res.json({
-            message : "Operation is not allowed, Please login first"
-        })
-    }
-}
 
 function postUser(req,res){
     console.log('post req->body ', req.body);
