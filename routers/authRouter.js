@@ -1,6 +1,9 @@
 const express = require('express');
 const authRouter = express.Router();
 const userModel = require('../models/userModel')
+const jwt = require('jsonwebtoken');
+const {secretKey} = require('../secret')
+
 
 authRouter
 .route('/signup')
@@ -34,7 +37,9 @@ async function loginUser(req,res){
             let user = await userModel.findOne({email:data.email});
             if(user){
                 if(user.password==data.password){
-                    res.cookie("isLoggedIn",true);
+                    let uid = user['_id'];
+                    const token = jwt.sign({payload : uid},secretKey);
+                    res.cookie("isLogin",token)
                     res.json({
                         message : "User logged in successfully",
                         user
